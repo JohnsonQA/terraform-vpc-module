@@ -50,7 +50,7 @@ resource "aws_route" "database_peering"{
 #Should add peering connection from default to my vpc 
 resource "aws_route" "default_peering"{
     count = var.is_peering_required ? 1 : 0
-    route_table_id = data.aws_route_table.main.id
+    route_table_id = data.aws_route_table.main.id        
     destination_cidr_block = var.cidr_block   #it's my vpc cider block
-    vpc_peering_connection_id = aws_vpc_peering_connection.default[count.index].id
+    vpc_peering_connection_id = aws_vpc_peering_connection.default[count.index].id   #Since peering connection is between two VPC there will be only one ID
 } 
