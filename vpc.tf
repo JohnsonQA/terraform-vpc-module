@@ -79,6 +79,7 @@ resource "aws_subnet" "database"{
     )
 }
 
+# EIP will create a static ip which can be used for NGW. so that IP won't change of NGW and traffic can route seamleslly
 resource "aws_eip" "nat"{
     domain = "vpc"
     tags = merge(
