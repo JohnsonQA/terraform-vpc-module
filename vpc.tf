@@ -32,13 +32,13 @@ resource "aws_internet_gateway" "main" {
     )
 }
 
-#Need subnet name as roboshop-dev-us-east-1a
+#Need subnet name as roboshop-dev-public-us-east-1a
 resource "aws_subnet" "public"{
     count = length(var.public_subnet_cidrs)
     vpc_id = aws_vpc.main.id
     cidr_block = var.public_subnet_cidrs[count.index]    #since we need 2 pub subnets, we using count based loop
     availability_zone = local.az_names[count.index]
-    map_public_ip_on_launch = true   #for public subnets it will automaticall give access to internet when ec2 is alunched in pub subnets
+    map_public_ip_on_launch = true   #Pub Subnets will have a public IP so that we can connect to instances that are in public subnets via public IP
 
     tags = merge(
         var.public_tags,
@@ -102,7 +102,7 @@ resource "aws_nat_gateway" "main"{
       Name = "${var.project}-ngw-${var.environment}"
     }
   ) 
-  # To ensure proper ordering, it is recommended to add an explicit dependency
+  # To ensure proper internet network routes via IGW, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
   depends_on = [aws_internet_gateway.main]   
 }
